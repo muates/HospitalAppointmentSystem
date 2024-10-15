@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: HospitalAppointmentSystemDb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    command: >
+      postgres -c max_prepared_transactions=10
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
