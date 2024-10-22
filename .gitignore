@@ -24,8 +24,9 @@ project.fragment.lock.json
 *.cache
 *.tmp
 
-Docker/
+Docker/*
 .dockerignore
+!Docker/docker-compose.yml
 
 *.nupkg
 *.snupkg
