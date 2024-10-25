@@ -10,6 +10,8 @@ builder.Services
     .AddDataAccessServices()
     .AddApplicationServices();
 
+builder.Services.AddLogging(configure => configure.AddConsole()); // Konsola log yazdırma
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,6 +30,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseApplicationMiddleware();
 app.MapControllers();
 
 app.Run();

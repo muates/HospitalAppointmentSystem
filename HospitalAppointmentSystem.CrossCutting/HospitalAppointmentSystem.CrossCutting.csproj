@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HospitalAppointmentSystem.Core\HospitalAppointmentSystem.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AspectInjector" Version="2.8.3-pre3" />
+    </ItemGroup>
+
 </Project>

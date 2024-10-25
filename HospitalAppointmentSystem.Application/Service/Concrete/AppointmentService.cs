@@ -1,12 +1,15 @@
 using System.Transactions;
+using AspectInjector.Broker;
 using HospitalAppointmentSystem.Application.Converter;
 using HospitalAppointmentSystem.Application.Service.Abstract;
 using HospitalAppointmentSystem.Core.Model.Response;
 using HospitalAppointmentSystem.Core.Service.Concrete;
+using HospitalAppointmentSystem.CrossCutting.Exceptions;
 using HospitalAppointmentSystem.DataAccess.Repository.Abstract;
 using HospitalAppointmentSystem.Model.Dto.Appointment.Request;
 using HospitalAppointmentSystem.Model.Entity;
 using HospitalAppointmentSystem.Model.Enum;
+using ApplicationException = HospitalAppointmentSystem.CrossCutting.Exceptions.ApplicationException;
 
 namespace HospitalAppointmentSystem.Application.Service.Concrete;
 
@@ -23,9 +26,9 @@ public class AppointmentService(
     public new async Task<OperationResponse<Appointment>> GetByIdAsync(string id)
     {
         var appointment = await _repository.GetByIdAsync(id);
-        
-        if (appointment is null) 
-            return new OperationResponse<Appointment>(404, "Appointment not found", null);
+
+        if (appointment is null)
+            throw new NotFoundException("Appointment not found");
 
         var currentDate = DateTime.UtcNow;
         
@@ -36,7 +39,7 @@ public class AppointmentService(
             appointment.Status = AppointmentStatus.Canceled;
             await _repository.UpdateAsync(appointment);
 
-            return new OperationResponse<Appointment>(404, "Appointment date cannot be in the future", null);
+            throw new AppointmentDateInFutureException("Appointment date cannot be in the future");
         }
         
         return new OperationResponse<Appointment>(200, "Appointment retrieved successfully", appointment);
@@ -51,7 +54,7 @@ public class AppointmentService(
             var hasSlots = await HasAvailableAppointmentSlotsAsync(request.DoctorId);
             if (!hasSlots)
             {
-                return new OperationResponse<object>(400, "Doctor does not have available appointment slots", null);
+                throw new DoctorNotAvailableException("Doctor does not have available appointment slots");
             }
 
             var appointment = AppointmentConverter.ToEntity(request);
@@ -71,8 +74,7 @@ public class AppointmentService(
         }
         catch (Exception e)
         {
-            return new OperationResponse<object>(500, $"An error occurred while creating the appointment: {e.Message}",
-                null);
+            throw new ApplicationException(e.Message);
         }
     }
 
@@ -90,8 +92,7 @@ public class AppointmentService(
         }
         catch (Exception e)
         {
-            return new OperationResponse<object>(500, $"An error occurred while updating the appointment: {e.Message}",
-                null);
+            throw new ApplicationException(e.Message);
         }
     }
 
@@ -120,8 +121,8 @@ public class AppointmentService(
         var doctorResult = await doctorTask;
         var patientResult = await patientTask;
         
-        if (doctorResult.Data is null) throw new ApplicationException("Doctor not found");
-        if (patientResult.Data is null) throw new NullReferenceException("Patient is null");
+        if (doctorResult.Data is null) throw new NotFoundException("Doctor not found");
+        if (patientResult.Data is null) throw new NotFoundException("Patient is null");
 
         return (doctorResult.Data, patientResult.Data);
     }

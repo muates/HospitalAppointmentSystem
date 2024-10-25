@@ -5,6 +5,7 @@ using HospitalAppointmentSystem.Core.Service.Concrete;
 using HospitalAppointmentSystem.DataAccess.Repository.Abstract;
 using HospitalAppointmentSystem.Model.Dto.Doctor.Request;
 using HospitalAppointmentSystem.Model.Entity;
+using ApplicationException = HospitalAppointmentSystem.CrossCutting.Exceptions.ApplicationException;
 
 namespace HospitalAppointmentSystem.Application.Service.Concrete;
 
@@ -25,7 +26,7 @@ public class DoctorService(IDoctorRepository repository)
         }
         catch (Exception e)
         {
-            return new OperationResponse<object>(500, $"An error occurred while creating the doctor: {e.Message}", null);
+            throw new ApplicationException(e.Message);
         }
     }
 
@@ -43,8 +44,7 @@ public class DoctorService(IDoctorRepository repository)
         }
         catch (Exception e)
         {
-            return new OperationResponse<object>(500, $"An error occurred while updating the doctor: {e.Message}",
-                null);
+            throw new ApplicationException(e.Message);
         }
     }
 
@@ -58,7 +58,7 @@ public class DoctorService(IDoctorRepository repository)
         }
         catch (Exception e)
         {
-            return new OperationResponse<object>(500, $"An error occurred while updating the doctor: {e.Message}", null);
+            throw new ApplicationException(e.Message);
         }
     }
 }

@@ -1,5 +1,7 @@
 using HospitalAppointmentSystem.Application.Service.Abstract;
 using HospitalAppointmentSystem.Application.Service.Concrete;
+using HospitalAppointmentSystem.CrossCutting.Logger.Abstract;
+using HospitalAppointmentSystem.CrossCutting.Logger.Concrete;
 using HospitalAppointmentSystem.DataAccess.Config;
 using HospitalAppointmentSystem.DataAccess.Context;
 using HospitalAppointmentSystem.DataAccess.Repository.Abstract;
@@ -16,6 +18,7 @@ public static class ServiceRegistrationExtension
         services.AddScoped<IDoctorService, DoctorService>();
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<ILoggerService, LoggerService>();
 
         return services;
     }
