@@ -12,9 +12,9 @@ public class LoggerService(ILogger<LoggerService> logger) : ILoggerService
         _logger.LogInformation(message);
     }
 
-    public void LogError(string message, Exception ex)
+    public void LogError(string message)
     {
-        _logger.LogError(ex, message);
+        _logger.LogError(message);
     }
 
     public void LogWarning(string message)

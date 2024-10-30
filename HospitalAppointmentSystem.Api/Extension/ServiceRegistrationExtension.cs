@@ -18,7 +18,6 @@ public static class ServiceRegistrationExtension
         services.AddScoped<IDoctorService, DoctorService>();
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
-        services.AddScoped<ILoggerService, LoggerService>();
 
         return services;
     }
@@ -38,6 +37,13 @@ public static class ServiceRegistrationExtension
         
         services.AddDbContext<PostgreSqlDbContext>(
             options => options.UseNpgsql(EnvironmentConfig.PostgreSqlConnection), ServiceLifetime.Transient);
+
+        return services;
+    }
+
+    public static IServiceCollection AddCrossCuttingServices(this IServiceCollection services)
+    {
+        services.AddSingleton<ILoggerService, LoggerService>();
 
         return services;
     }

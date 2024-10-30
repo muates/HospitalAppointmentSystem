@@ -8,7 +8,11 @@ public class LoggingMiddleware(RequestDelegate next)
     public async Task InvokeAsync(HttpContext context)
     {
         var stopwatch = Stopwatch.StartNew();
-        GlobalLogger.LogInfo($"Entering method {context.Request.Method} {context.Request.Path}");
+        var requestPath = context.Request.Path;
+        var requestMethod = context.Request.Method;
+        var userId = context.User?.Identity?.IsAuthenticated == true ? context.User.FindFirst("id")?.Value : "Anonymous";
+
+        GlobalLogger.LogInfo($"[{userId}] Entering method {requestMethod} {requestPath}");
 
         try
         {
@@ -16,12 +20,13 @@ public class LoggingMiddleware(RequestDelegate next)
         }
         catch (Exception ex)
         {
-            GlobalLogger.LogError($"Error in method {context.Request.Method} {context.Request.Path}.", ex);
+            GlobalLogger.LogError($"[{userId}] Error in method {requestMethod} {requestPath}: {ex.Message}");
+            throw;
         }
         finally
         {
             stopwatch.Stop();
-            GlobalLogger.LogInfo($"Exiting method {context.Request.Method} {context.Request.Path} in {stopwatch.ElapsedMilliseconds} ms");
+            GlobalLogger.LogInfo($"[{userId}] Exiting method {requestMethod} {requestPath} in {stopwatch.ElapsedMilliseconds} ms");
         }
     }
 }

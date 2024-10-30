@@ -1,5 +1,4 @@
 using System.Transactions;
-using AspectInjector.Broker;
 using HospitalAppointmentSystem.Application.Converter;
 using HospitalAppointmentSystem.Application.Service.Abstract;
 using HospitalAppointmentSystem.Core.Model.Response;

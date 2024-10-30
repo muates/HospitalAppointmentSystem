@@ -1,3 +1,12 @@
 namespace HospitalAppointmentSystem.CrossCutting.Exceptions;
 
-public class DoctorNotAvailableException(string message) : Exception(message);
+public class DoctorNotAvailableException : Exception
+{
+    public DoctorNotAvailableException(string message) : base(message)
+    {
+    }
+
+    public DoctorNotAvailableException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+}

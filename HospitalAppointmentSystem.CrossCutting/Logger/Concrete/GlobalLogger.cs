@@ -16,9 +16,9 @@ public static class GlobalLogger
         _loggingService?.LogInfo(message);
     }
 
-    public static void LogError(string message, Exception ex)
+    public static void LogError(string message)
     {
-        _loggingService?.LogError(message, ex);
+        _loggingService?.LogError(message);
     }
 
     public static void LogWarning(string message)

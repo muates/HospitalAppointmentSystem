@@ -1,4 +1,6 @@
 using HospitalAppointmentSystem.Api.Extension;
+using HospitalAppointmentSystem.CrossCutting.Logger.Abstract;
+using HospitalAppointmentSystem.CrossCutting.Logger.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +10,11 @@ builder.Services.AddControllers();
 builder.Services
     .AddDatabaseServices()
     .AddDataAccessServices()
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddCrossCuttingServices();
 
-builder.Services.AddLogging(configure => configure.AddConsole()); // Konsola log yazdırma
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +33,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+var loggerService = app.Services.GetRequiredService<ILoggerService>();
+GlobalLogger.Configure(loggerService);
 
 app.UseApplicationMiddleware();
 app.MapControllers();

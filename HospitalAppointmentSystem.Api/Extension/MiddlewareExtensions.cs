@@ -6,9 +6,9 @@ public static class MiddlewareExtensions
 {
     public static IApplicationBuilder UseApplicationMiddleware(this IApplicationBuilder builder)
     {
-        builder.UseMiddleware<LoggingMiddleware>();
         builder.UseMiddleware<ErrorHandlingMiddleware>();
-        
+        builder.UseMiddleware<LoggingMiddleware>();
+
         return builder;
     }
 }
